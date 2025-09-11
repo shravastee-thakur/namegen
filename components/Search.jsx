@@ -2,18 +2,25 @@
 import React, { useState } from "react";
 import { Input } from "./ui/input";
 import { Button } from "./ui/button";
+import QueryDialog from "./QueryDialog";
+import { useQueryContext } from "@/context/BusinessNameContext";
 
 const Search = () => {
   const [keyword, setKeyword] = useState();
+  const [queryDialog, setQueryDialog] = useState(false);
+  const { query, updateQuery } = useQueryContext();
 
   const handleKeyword = (e) => {
     setKeyword(e.target.value);
   };
 
-  const showQueryModal = () => {
+  const showQueryDialog = () => {
     if (!keyword) {
       alert("Keyword required!");
     }
+
+    updateQuery({ keyword });
+    setQueryDialog(!queryDialog);
   };
   return (
     <div className="flex justify-center items-center pt-5">
@@ -23,10 +30,15 @@ const Search = () => {
           placeholder="Enter keyword..."
           className="h-12 text-white md:text-base border-primary"
         />
-        <Button onClick={showQueryModal} className="h-12 text-lg px-5">
+        <Button onClick={showQueryDialog} className="h-12 text-lg px-5">
           Generate
         </Button>
       </div>
+      <QueryDialog
+        queryDialog={queryDialog}
+        setQueryDialog={setQueryDialog}
+        keyword={keyword}
+      />
     </div>
   );
 };
